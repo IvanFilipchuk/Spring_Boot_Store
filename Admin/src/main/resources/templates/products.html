@@ -35,6 +35,27 @@
                         <button type="submit" class="btn btn-outline-primary">szukaj</button>
                     </form>
                 </div>
+                <div th:if="${error}" class="text-center alert alert-danger">
+                    <p th:text="${error}"></p>
+                </div>
+                <div class="d-flex mb-3">
+<!--                    &lt;!&ndash; Przycisk otwierający modal &ndash;&gt;-->
+<!--                    <button type="button" class="btn btn-primary btn-lg mx-1" data-toggle="modal" data-target="#exampleAddCategoryModal"-->
+<!--                            data-whatever="@mdo">Dodaj nową kategorię-->
+<!--                    </button>-->
+
+                    <!-- Przycisk do eksportu -->
+                    <form method="get" th:action="@{/export-products}">
+                        <button type="submit" class="btn btn-success btn-lg mx-1">Eksportuj produkty do JSON</button>
+                    </form>
+                </div>
+                <form method="post" th:action="@{/import-products}" enctype="multipart/form-data" class="mb-3">
+                    <div class="mb-3">
+                        <label for="file" class="form-label">Wybierz plik JSON do importu:</label>
+                        <input type="file" class="form-control" id="file" name="file" accept=".json" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">Importuj produkty</button>
+                </form>
                 <a th:href="@{/add-product}" class="btn btn-primary">Dodaj Produkt</a>
                 <p th:if="${size == 0}">Brak Produktów</p>
                 <div th:if="${success}" class="text-center alert alert-success">

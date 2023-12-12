@@ -72,5 +72,19 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.existsByName(name);
     }
 
+    @Override
+    public Category findOrCreateCategory(String categoryName) {
+        Optional<Category> existingCategory = categoryRepository.findByName(categoryName);
+
+        if (existingCategory.isPresent()) {
+            return existingCategory.get();
+        } else {
+            Category newCategory = new Category();
+            newCategory.setName(categoryName);
+            newCategory.setActivated(true);
+            newCategory.setDeleted(false);
+            return categoryRepository.save(newCategory);
+        }
+    }
 
 }

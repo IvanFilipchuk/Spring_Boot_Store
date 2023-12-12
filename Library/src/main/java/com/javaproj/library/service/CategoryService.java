@@ -24,4 +24,5 @@ public interface CategoryService {
     List<CategoryDto> getCategoriesAndSize();
     boolean existsByName(String name);
 
+    Category findOrCreateCategory(String categoryName);
 }

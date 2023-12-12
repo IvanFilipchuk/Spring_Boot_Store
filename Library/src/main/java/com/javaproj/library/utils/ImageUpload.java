@@ -32,4 +32,14 @@ public class ImageUpload {
         }
         return isExist;
     }
+    public boolean uploadFileFromBytes(byte[] fileBytes, String uniqueFilename) {
+        boolean isUpload = false;
+        try {
+            Files.write(Paths.get(UPLOAD_FOLDER + File.separator + uniqueFilename), fileBytes);
+            isUpload = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return isUpload;
+    }
 }

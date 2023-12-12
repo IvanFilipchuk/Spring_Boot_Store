@@ -215,4 +215,18 @@ public class ProductServiceImpl implements ProductService {
         }
         return productDtos;
     }
+    @Override
+    public void saveProductFromJson(ProductDto productDto) {
+        Product product = new Product();
+        product.setName(productDto.getName());
+        product.setDescription(productDto.getDescription());
+        product.setCurrentQuantity(productDto.getCurrentQuantity());
+        product.setCostPrice(productDto.getCostPrice());
+        product.setSalePrice(productDto.getSalePrice());
+        product.setCategory(productDto.getCategory());
+        product.set_deleted(false);
+        product.set_activated(true);
+
+        productRepository.save(product);
+    }
 }

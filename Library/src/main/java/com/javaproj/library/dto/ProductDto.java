@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Arrays;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,4 +22,5 @@ public class ProductDto {
     private boolean activated;
     private boolean deleted;
     private String currentPage;
+
 }
