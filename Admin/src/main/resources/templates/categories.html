@@ -1,45 +1,73 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<html lang="pl" xmlns:th="https://www.thymeleaf.org/">
 <head th:replace="~{fragments::header}"></head>
 <body id="page-top">
 
 <!-- Page Wrapper -->
 <div id="wrapper">
 
-    <!--Sidebar-->
+    <!-- Pasek boczny -->
     <ul th:replace="~{fragments::sidebar}"></ul>
-    <!-- End of Sidebar -->
+    <!-- Koniec Paska bocznego -->
 
-    <!-- Content Wrapper -->
+    <!-- Zawartość -->
     <div id="content-wrapper" class="d-flex flex-column">
 
-        <!-- Main Content -->
+        <!-- Główna Zawartość -->
         <div id="content">
 
-            <!-- Topbar -->
+            <!-- Pasek Górny -->
             <nav th:replace="~{fragments::top-navbar}"></nav>
-            <!-- End of Topbar -->
+            <!-- Koniec Paska Górnego -->
 
-            <!-- Begin Page Content -->
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleAddCategoryModal"
-                    data-whatever="@mdo">Add new category
-            </button>
-            <p th:if="${size == 0}">No category</p>
-            <div th:if="${success}" class="text-center alert alert-success">
-                <p th:text="${success}">
-                </p>
-            </div>
+            <!-- Komunikat o błędzie -->
             <div th:if="${error}" class="text-center alert alert-danger">
                 <p th:text="${error}"></p>
+            </div>
+
+            <div class="d-flex mb-3">
+                <!-- Przycisk otwierający modal -->
+                <button type="button" class="btn btn-primary btn-lg mx-1" data-toggle="modal" data-target="#exampleAddCategoryModal"
+                        data-whatever="@mdo">Dodaj nową kategorię
+                </button>
+
+                <!-- Przycisk do eksportu -->
+                <form method="get" th:action="@{/export-categories}">
+                    <button type="submit" class="btn btn-success btn-lg mx-1">Eksportuj zamówienia do JSON</button>
+                </form>
+            </div>
+
+            <!-- Formularz do importu -->
+            <form method="post" th:action="@{/import-categories}" enctype="multipart/form-data" class="mb-3">
+                <div class="mb-3">
+                    <label for="file" class="form-label">Wybierz plik JSON do importu:</label>
+                    <input type="file" class="form-control" id="file" name="file" accept=".json" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg btn-block">Importuj kategorie</button>
+            </form>
+
+            <!-- Lista błędów podczas importu -->
+            <div th:if="${errorCategories != null and not #lists.isEmpty(errorCategories)}" class="my-3">
+                <div class="alert alert-danger">
+                    <h4 class="alert-heading">Błędy podczas importowania niektórych kategorii:</h4>
+                    <ul>
+                        <li th:each="errorCategory : ${errorCategories}" th:text="${errorCategory.name}"></li>
+                    </ul>
+                </div>
+            </div>
+
+            <p th:if="${size == 0}">Brak kategorii</p>
+            <div th:if="${success}" class="text-center alert alert-success">
+                <p th:text="${success}"></p>
             </div>
 
             <table class="table table-striped" th:if="${size > 0}">
                 <thead>
                 <tr>
-                    <th scope="col">Category Index</th>
-                    <th scope="col">Category Name</th>
-                    <th scope="col">Update Name</th>
-                    <th scope="col">Action</th>
+                    <th scope="col">Indeks kategorii</th>
+                    <th scope="col">Nazwa kategorii</th>
+                    <th scope="col">Aktualizuj nazwę</th>
+                    <th scope="col">Akcja</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -49,52 +77,53 @@
                     <td>
                         <a id="editButton"
                            th:href="@{/findById(id = ${category.id})}"
-                           class="btn btn-primary">Update</a>
+                           class="btn btn-primary">Aktualizuj</a>
                     </td>
                     <td>
                         <a th:if="${category.deleted} == true" th:href="@{/enable-category(id = ${category.id})}"
-                           class="btn btn-primary">Enable</a>
+                           class="btn btn-primary">Włącz</a>
                         <a th:if="${category.deleted} == false" th:href="@{/delete-category(id = ${category.id})}"
-                           class=" btn btn-danger">Delete</a>
+                           class=" btn btn-danger">Usuń</a>
                     </td>
                 </tr>
                 </tbody>
             </table>
 
-            <!-- End of Main Content -->
+            <!-- Koniec Głównej Zawartości -->
 
-            <!-- Footer -->
+            <!-- Stopka -->
             <footer th:replace="~{fragments::footer}"></footer>
-            <!-- End of Footer -->
+            <!-- Koniec Stopki -->
 
         </div>
-        <!-- End of Content Wrapper -->
+        <!-- Koniec Zawartości -->
 
     </div>
 </div>
-<!-- End of Page Wrapper -->
+<!-- Koniec Page Wrapper -->
 
-<!-- Scroll to Top Button-->
+<!-- Przycisk do przewijania do góry -->
 <a th:replace="~{fragments::scroll}"></a>
 
-<!--Add Categories Modal-->
+<!-- Modal Dodawania Kategorii -->
 <div class="modal fade" id="exampleAddCategoryModal" tabindex="-1" role="dialog"
      aria-labelledby="exampleAddCategoryModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleAddCategoryModalLabel">New Category</h5>
+                <h5 class="modal-title" id="exampleAddCategoryModalLabel">Nowa kategoria</h5>
             </div>
+
             <div class="modal-body">
                 <form th:action="@{/save-category}" method="post">
                     <div class="form-group">
-                        <label for="name" class="col-form-label">Category Name:</label>
+                        <label for="name" class="col-form-label">Nazwa kategorii:</label>
                         <input type="text" class="form-control" id="name" name="name">
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Save</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Zapisz</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
                     </div>
                 </form>
             </div>
@@ -102,15 +131,14 @@
     </div>
 </div>
 
-<!--End-->
-
-<!-- Edit Category Modal -->
+<!-- Edycja Kategorii Modal -->
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog"
      aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
+
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Edit category</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Edytuj kategorię</h5>
             </div>
             <div class="modal-body">
                 <form th:action="@{/update-category}" method="put">
@@ -119,16 +147,17 @@
                         </label> <input type="text" class="form-control" id="idEdit" name="id" readonly>
                     </div>
                     <div class="form-group">
-                        <label for="nameEdit" class="col-form-label">Category
-                            Name</label> <input type="text" class="form-control" id="nameEdit" name="name">
+                        <label for="nameEdit" class="col-form-label">Nazwa
+                            Kategorii</label> <input type="text" class="form-control" id="nameEdit" name="name">
                     </div>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="submit" class="btn btn-primary">Zapisz</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
-<!-- End -->
+<!-- Koniec -->
+
 <!-- Bootstrap core JavaScript-->
 <div th:replace="~{fragments::script}"></div>
 

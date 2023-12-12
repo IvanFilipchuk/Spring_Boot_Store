@@ -68,5 +68,9 @@ public class CategoryServiceImpl implements CategoryService {
         List<CategoryDto> categories = categoryRepository.getCategoriesAndSize();
         return categories;
     }
+    public boolean existsByName(String name) {
+        return categoryRepository.existsByName(name);
+    }
+
 
 }

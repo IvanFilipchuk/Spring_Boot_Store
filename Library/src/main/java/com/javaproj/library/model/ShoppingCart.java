@@ -1,5 +1,6 @@
 package com.javaproj.library.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,6 +21,7 @@ public class ShoppingCart {
     private Long id;
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
+    @JsonIgnore
     private Customer customer;
 
     private double totalPrice;

@@ -20,4 +20,7 @@ public class Category {
     private boolean activated;
     @Column(name = "is_deleted")
     private boolean deleted;
+    public Category(String name) {
+        this.name = name;
+    }
 }

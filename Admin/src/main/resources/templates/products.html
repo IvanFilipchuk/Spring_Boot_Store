@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th = "https://www.thymeleaf.org/">
+<html lang="pl" xmlns:th="https://www.thymeleaf.org/">
 
-<head th:replace = "~{fragments::header}">
+<head th:replace="~{fragments::header}">
 
 </head>
 
@@ -11,7 +11,7 @@
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <ul th:replace = "~{fragments::sidebar}">
+    <ul th:replace="~{fragments::sidebar}">
     </ul>
     <!-- End of Sidebar -->
 
@@ -22,73 +22,75 @@
         <div id="content">
 
             <!-- Topbar -->
-            <nav th:replace = "~{fragments::top-navbar}">
+            <nav th:replace="~{fragments::top-navbar}">
             </nav>
             <!-- End of Topbar -->
 
             <!-- Begin Page Content -->
             <div class="container-fluid">
                 <div class="input-group" style="width: 30%; margin-bottom: 20px;">
-                    <form th:action = "@{/search-products/0}" method = "get">
-                        <input type="text" class="form-control rounded" placeholder="Search" name = "keyword" aria-label="Search"
+                    <form th:action="@{/search-products/0}" method="get">
+                        <input type="text" class="form-control rounded" placeholder="Szukaj" name="keyword" aria-label="Szukaj"
                                aria-describedby="search-addon" />
-                        <button type="submit" class="btn btn-outline-primary">search</button>
+                        <button type="submit" class="btn btn-outline-primary">szukaj</button>
                     </form>
                 </div>
-                <a th:href="@{/add-product}" class = "btn btn-primary">Add Product</a>
-                <p th:if="${size == 0} ">No Products</p>
-                <div th:if = "${success}" class = "text-center alert alert-success">
-                    <p th:text = "${success}"></p>
+                <a th:href="@{/add-product}" class="btn btn-primary">Dodaj Produkt</a>
+                <p th:if="${size == 0}">Brak Produktów</p>
+                <div th:if="${success}" class="text-center alert alert-success">
+                    <p th:text="${success}"></p>
                 </div>
-                <div th:if = "${error}" class="text-center alert alert-danger">
-                    <p th:text = "${error}"></p>
+                <div th:if="${error}" class="text-center alert alert-danger">
+                    <p th:text="${error}"></p>
                 </div>
-                <table class="table table-bordered" th:if = "${size > 0}">
+                <table class="table table-bordered" th:if="${size > 0}">
                     <thead>
                     <tr>
-                        <th scope="col">Name</th>
-                        <th scope="col">Category</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Quantity</th>
-                        <th scope="col">Image</th>
-                        <th scope="col">Update</th>
-                        <th scope="col">Action</th>
+                        <th scope="col">Nazwa</th>
+                        <th scope="col">Kategoria</th>
+                        <th scope="col">Cena</th>
+                        <th scope="col">Ilość</th>
+                        <th scope="col">Zdjęcie</th>
+                        <th scope="col">Aktualizuj</th>
+                        <th scope="col">Akcja</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each = "product : ${products}">
-                        <th scope="row" th:text = "${product.name}"></th>
-                        <td th:text = "${product.category.name}"></td>
-                        <td th:text = "${product.costPrice}"></td>
-                        <td th:text = "${product.currentQuantity}"></td>
+                    <tr th:each="product : ${products}">
+                        <th scope="row" th:text="${product.name}"></th>
+                        <td th:text="${product.category.name}"></td>
+                        <td th:text="${product.costPrice}"></td>
+                        <td th:text="${product.currentQuantity}"></td>
                         <td>
-                            <img class = "my-product-image" style="height: 40px; width: 40px;" alt=""
+                            <img class="my-product-image" style="height: 40px; width: 40px;" alt=""
                                  th:src="'data:image/jpeg;base64,' + ${product.image}">
                         </td>
-                        <td><a th:href="@{/update-product/{id}(id= ${product.id})}" class="btn btn-primary">Update</a></td>
+                        <td><a th:href="@{/update-product/{id}(id= ${product.id})}"
+                               class="btn btn-primary">Aktualizuj</a></td>
                         <td>
-                            <a th:if="${product.deleted} == true" th:href="@{/enable-product(id = ${product.id})}"
-                               class="btn btn-primary">Enable</a>
-                            <a th:if="${product.deleted} == false" th:href="@{/delete-product(id = ${product.id})}"
-                               class=" btn btn-danger">Delete</a>
+                            <a th:if="${product.deleted} == true"
+                               th:href="@{/enable-product(id = ${product.id})}" class="btn btn-primary">Aktywuj</a>
+                            <a th:if="${product.deleted} == false"
+                               th:href="@{/delete-product(id = ${product.id})}" class=" btn btn-danger">Usuń</a>
                         </td>
                     </tr>
                     </tbody>
                 </table>
 
-
                 <!--Pagination  -->
                 <nav aria-label="...">
-                    <ul class="pagination" >
-                        <li th:if= "${currentPage != 0}" class="page-item ">
-                            <a th:href = "@{'/products/' + ${currentPage - 1}}" class="page-link">Previous</a>
-                        </li >
-                        <li th:each = "i : ${#numbers.sequence(1, totalPages)}" th:classappend = "${currentPage == i - 1 ? 'active' : ''}" class="page-item">
-                            <a th:href = "@{'/products/' + ${i - 1}}" class="page-link" href="#">
-				     <span th:text = "${i}">
-				     </span></a></li>
-                        <li th:if = "${currentPage + 1 != totalPages}" class="page-item">
-                            <a th:href = "@{'/products/' + ${currentPage + 1}}" class="page-link" href="#">Next</a>
+                    <ul class="pagination">
+                        <li th:if="${currentPage != 0}" class="page-item ">
+                            <a th:href="@{'/products/' + ${currentPage - 1}}" class="page-link">Poprzednia</a>
+                        </li>
+                        <li th:each="i : ${#numbers.sequence(1, totalPages)}"
+                            th:classappend="${currentPage == i - 1 ? 'active' : ''}" class="page-item">
+                            <a th:href="@{'/products/' + ${i - 1}}" class="page-link" href="#">
+                                    <span th:text="${i}">
+                                    </span></a>
+                        </li>
+                        <li th:if="${currentPage + 1 != totalPages}" class="page-item">
+                            <a th:href="@{'/products/' + ${currentPage + 1}}" class="page-link" href="#">Następna</a>
                         </li>
                     </ul>
                 </nav>
@@ -100,7 +102,7 @@
         <!-- End of Main Content -->
 
         <!-- Footer -->
-        <footer th:replace = "~{fragments::footer}">
+        <footer th:replace="~{fragments::footer}">
         </footer>
         <!-- End of Footer -->
 
@@ -111,12 +113,12 @@
 <!-- End of Page Wrapper -->
 
 <!-- Scroll to Top Button-->
-<a th:replace = "~{fragments::scroll}">
+<a th:replace="~{fragments::scroll}">
 </a>
 
-
 <!-- Bootstrap core JavaScript-->
-<div th:replace = "~{fragments::script}"></div>
+<div th:replace="~{fragments::script}">
+</div>
 </body>
 
 </html>

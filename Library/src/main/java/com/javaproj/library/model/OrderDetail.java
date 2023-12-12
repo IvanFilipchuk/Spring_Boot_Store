@@ -24,4 +24,6 @@ public class OrderDetail {
     @JoinColumn(name = "product_id", referencedColumnName = "product_id")
     private Product product;
 
+    @Column(name = "quantity")
+    private Integer quantity; // Add this field to represent the quantity of the product in an order detail
 }

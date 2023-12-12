@@ -21,4 +21,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
             "where c.activated = true and c.deleted = false " +
             "group by c.id ")
     List<CategoryDto> getCategoriesAndSize();
+    boolean existsByName(String name);
+
 }

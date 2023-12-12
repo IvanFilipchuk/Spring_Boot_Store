@@ -1,5 +1,6 @@
 package com.javaproj.admin.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaproj.library.model.Category;
 import com.javaproj.library.service.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -10,8 +11,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,18 +48,18 @@ public class CategoryController {
         try {
             categoryService.save(category);
             model.addAttribute("categoryNew", category);
-            redirectAttributes.addFlashAttribute("success", "Add successfully!");
+            redirectAttributes.addFlashAttribute("success", "Dodano pomyślnie!");
         } catch (DataIntegrityViolationException e1) {
             e1.printStackTrace();
-            redirectAttributes.addFlashAttribute("error", "Duplicate name of category, please check again!");
+            redirectAttributes.addFlashAttribute("error", "Duplikat nazwy kategorii, proszę sprawdzić ponownie!");
         } catch (Exception e2) {
             e2.printStackTrace();
             model.addAttribute("categoryNew", category);
-            redirectAttributes.addFlashAttribute("error",
-                    "Error server");
+            redirectAttributes.addFlashAttribute("error", "Błąd serwera");
         }
         return "redirect:/categories";
     }
+
 
     @RequestMapping(value = "/findById", method = {RequestMethod.PUT, RequestMethod.GET})
     @ResponseBody
@@ -63,29 +71,30 @@ public class CategoryController {
     public String update(Category category, RedirectAttributes redirectAttributes) {
         try {
             categoryService.update(category);
-            redirectAttributes.addFlashAttribute("success", "Update successfully!");
+            redirectAttributes.addFlashAttribute("success", "Pomyślnie zaktualizowano!");
         } catch (DataIntegrityViolationException e1) {
             e1.printStackTrace();
-            redirectAttributes.addFlashAttribute("error", "Duplicate name of category, please check again!");
+            redirectAttributes.addFlashAttribute("error", "Duplikat nazwy kategorii, proszę sprawdzić ponownie!");
         } catch (Exception e2) {
             e2.printStackTrace();
-            redirectAttributes.addFlashAttribute("error", "Error from server or duplicate name of category, please check again!");
+            redirectAttributes.addFlashAttribute("error", "Błąd serwera lub duplikat nazwy kategorii, proszę sprawdzić ponownie!");
         }
         return "redirect:/categories";
     }
+
 
 
     @RequestMapping(value = "/delete-category", method = {RequestMethod.GET, RequestMethod.PUT})
     public String delete(Long id, RedirectAttributes redirectAttributes) {
         try {
             categoryService.deleteById(id);
-            redirectAttributes.addFlashAttribute("success", "Deleted successfully!");
+            redirectAttributes.addFlashAttribute("success", "Usunięto pomyślnie!");
         } catch (DataIntegrityViolationException e1) {
             e1.printStackTrace();
             redirectAttributes.addFlashAttribute("error", "Duplicate name of category, please check again!");
         } catch (Exception e2) {
             e2.printStackTrace();
-            redirectAttributes.addFlashAttribute("error", "Error server");
+            redirectAttributes.addFlashAttribute("error", "Błąd serwera");
         }
         return "redirect:/categories";
     }
@@ -94,15 +103,73 @@ public class CategoryController {
     public String enable(Long id, RedirectAttributes redirectAttributes) {
         try {
             categoryService.enableById(id);
-            redirectAttributes.addFlashAttribute("success", "Enable successfully");
+            redirectAttributes.addFlashAttribute("success", "Włączono pomyślnie");
         } catch (DataIntegrityViolationException e1) {
             e1.printStackTrace();
-            redirectAttributes.addFlashAttribute("error", "Duplicate name of category, please check again!");
+            redirectAttributes.addFlashAttribute("error", "Kategoria już istnieje!");
         } catch (Exception e2) {
             e2.printStackTrace();
-            redirectAttributes.addFlashAttribute("error", "Error server");
+            redirectAttributes.addFlashAttribute("error", "Błąd serwera!");
         }
         return "redirect:/categories";
     }
+    @GetMapping("/export-categories")
+    public String exportCategoriesToJson(RedirectAttributes redirectAttributes) {
+        List<Category> categories = categoryService.findALl();
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String json = objectMapper.writeValueAsString(categories);
+            objectMapper.writeValue(new File("data/exportJson/categories.json"), categories);
+            redirectAttributes.addFlashAttribute("success", "Kategorie wyeksportowano pomyślnie");
+        } catch (IOException e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "Błąd przy eksporcie do JSON");
+        }
+        // Przekierowanie do tej samej strony, na której był użytkownik
+        return "redirect:/categories";
+    }
+
+    @PostMapping("/import-categories")
+    public String importCategoriesFromJson(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+        if (file.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Wybierz plik");
+            return "redirect:/categories";
+        }
+
+        try {
+            Path tempFile = Files.createTempFile("import", ".json");
+            Files.copy(file.getInputStream(), tempFile, StandardCopyOption.REPLACE_EXISTING);
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<Category> importedCategories = objectMapper.readValue(tempFile.toFile(), objectMapper.getTypeFactory().constructCollectionType(List.class, Category.class));
+            List<Category> errorCategories = new ArrayList<>();
+
+            for (Category importedCategory : importedCategories) {
+                try {
+                    if (!categoryService.existsByName(importedCategory.getName())) {
+                        categoryService.save(importedCategory);
+                    } else {
+                        errorCategories.add(importedCategory);
+                    }
+                } catch (DataIntegrityViolationException e) {
+                    e.printStackTrace();
+                    errorCategories.add(importedCategory);
+                }
+            }
+            if (!errorCategories.isEmpty()) {
+                redirectAttributes.addFlashAttribute("error", "Błąd podczas importowania niektórych kategorii.");
+                redirectAttributes.addFlashAttribute("errorCategories", errorCategories);
+            }else{
+
+            redirectAttributes.addFlashAttribute("success", "Zaimportowano kategorie pomyślnie");}
+        } catch (IOException e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "Błąd przy imporcie!");
+        }
+
+        return "redirect:/categories";
+    }
+
+
+
 
 }

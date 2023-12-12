@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<html lang="pl" xmlns:th="https://www.thymeleaf.org/">
+
 <head th:replace="~{fragments::header}"></head>
+
 <body id="page-top">
 
 <!-- Page Wrapper -->
@@ -22,19 +24,20 @@
 
             <!-- Begin Page Content -->
             <div th:if="${success}" class="text-center alert alert-success">
-                <p th:text="${success}">
-                </p>
+                <p th:text="${success}"></p>
             </div>
+
             <div class="table-main table-responsive">
                 <table class="table">
                     <thead>
                     <tr>
-                        <th class="order-date">Order Date</th>
-                        <th>Delivery Date</th>
-                        <th class="price-pr">Order Status</th>
-                        <th class="quantity-box">Total Price</th>
-                        <th class="total-pr">Payment Method</th>
-                        <th>Action</th>
+                        <th class="order-date">Data zamówienia</th>
+                        <th>Data dostawy</th>
+                        <th class="price-pr">Status zamówienia</th>
+                        <th class="quantity-box">Ilość</th>
+                        <th class="total-pr">Całkowita cena</th>
+                        <th>Metoda płatności</th>
+                        <th>Działanie</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -43,9 +46,7 @@
                             <span><b>[(${order.orderDate})]</b></span>
                         </td>
                         <td class="name-pr" th:if="${order.accept == true}">
-                            <a href="#">
-                                [(${order.deliveryDate})]
-                            </a>
+                            <a href="#">[(${order.deliveryDate})]</a>
                         </td>
                         <td class="price-pr">
                             <p th:text="${order.orderStatus}"></p>
@@ -55,13 +56,13 @@
                             <p style="color: red">$ [(${order.totalPrice})]</p>
                         </td>
                         <td class="total-pr" style="color: black">
-                            <span></span>[(${order.paymentMethod})]</span>
+                            <span>[(${order.paymentMethod})]</span>
                         </td>
                         <td>
-                            <a th:if="${order.accept} != false"  th:href="@{/cancel-order(id = ${order.id})}"
-                               class="btn btn-primary">Cancel</a>
+                            <a th:if="${order.accept} != false" th:href="@{/cancel-order(id = ${order.id})}"
+                               class="btn btn-primary">Anuluj</a>
                             <a th:if="${order.accept} == false" th:href="@{/accept-order(id = ${order.id})}"
-                               class=" btn btn-secondary">Accept</a>
+                               class="btn btn-secondary">Akceptuj</a>
                         </td>
                         </a>
                         </td>
@@ -87,7 +88,6 @@
 <a th:replace="~{fragments::scroll}"></a>
 
 <!--Add Categories Modal-->
-
 
 <!--End-->
 

@@ -1,5 +1,6 @@
 package com.javaproj.library.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -38,6 +39,7 @@ public class Customer {
     private Collection<Role> roles;
 
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
+    @JsonIgnore
     private ShoppingCart cart;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)

@@ -56,12 +56,19 @@ public class AdminConfiguration {
                                 .permitAll()
                 )
                 .logout(logout ->
-                        logout.invalidateHttpSession(true)
+                        logout
+                                .invalidateHttpSession(true)
                                 .clearAuthentication(true)
                                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                                .logoutSuccessUrl("/login?logout")
+                                .logoutSuccessUrl("/admin/login?logout")
+                                .logoutSuccessHandler((request, response, authentication) -> {
+                                    response.sendRedirect("/admin/login?logout");
+                                })
                                 .permitAll()
                 )
+
+
+
                 .authenticationManager(authenticationManager)
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
