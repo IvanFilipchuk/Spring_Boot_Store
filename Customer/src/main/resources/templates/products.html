@@ -44,19 +44,19 @@
                     <div class="product-item-filter row">
                         <div class="col-12 col-sm-8 text-center text-sm-left">
                             <div class="toolbar-sorter-right">
-                                <span>Sort by </span>
+                                <span>Filtruj </span>
                                 <select id="basic" class="selectpicker show-tick form-control"
                                         data-placeholder="$ USD" onchange="location = this.value;">
                                     <option>--Select--</option>
-                                    <option value="http://localhost:8889/shop/shop-detail">Normal</option>
-                                    <option value="http://localhost:8889/shop/high-price">High Price → Low Price
+                                    <option value="http://localhost:8889/shop/shop-detail">Normalne</option>
+                                    <option value="http://localhost:8889/shop/high-price">Wysoka cena → Niska cena
                                     </option>
-                                    <option value="http://localhost:8889/shop/lower-price">Low Price → High Price
+                                    <option value="http://localhost:8889/shop/lower-price">Niska cena → Wysoka cena
                                     </option>
-                                    <option value="4">Best Selling</option>
+                                    <option value="4">BestSeller</option>
                                 </select>
                             </div>
-                            <p>Showing all results</p>
+                            <p>Wszystkie wyniki</p>
                         </div>
                         <div class="col-12 col-sm-4 text-center text-sm-right">
                             <ul class="nav nav-tabs ml-auto">
@@ -90,7 +90,7 @@
                                                                     class="fas fa-eye"></i></a></li>
                                                         </ul>
                                                         <input type = "hidden" th:value = "${product.id}" name = "id" class = "form-control">
-                                                        <input type="submit" class="btn hvr-hover" value="Add to cart">
+                                                        <input type="submit" class="btn hvr-hover" value="Dodaj do kosza">
                                                     </div>
                                                 </div>
                                                 <div class="why-text">
@@ -119,7 +119,7 @@
                                                 <h4 th:text="${productView.name}"></h4>
                                                 <h5 th:text="'$' + ${productView.costPrice}"></h5>
                                                 <p th:text="${productView.description}"></p>
-                                                <a class="btn hvr-hover" href="#">Add to Cart</a>
+                                                <a class="btn hvr-hover" href="#">Dodaj do kosza</a>
                                             </div>
                                         </div>
                                     </div>
