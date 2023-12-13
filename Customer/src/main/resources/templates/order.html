@@ -42,14 +42,13 @@
                     <table class="table">
                         <thead>
                         <tr>
-                            <th class="order-date">Order Date</th>
-                            <th>Delivery Date</th>
-                            <th class="price-pr">Order Status</th>
-
-                            <th class="quantity-box">Quantity</th>
-                            <th>Total Price</th>
-                            <th class="total-pr">Payment Method</th>
-                            <th>Action</th>
+                            <th class="order-date">Data zamówienia</th>
+                            <th>Data dostawy</th>
+                            <th class="price-pr">Status zamówienia</th>
+                            <th class="quantity-box">Ilość</th>
+                            <th>Razem</th>
+                            <th class="total-pr">Metoda płatności</th>
+                            <th>Akcja</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -61,7 +60,7 @@
                                 <a th:if = "${order.accept != null}" href="#">
                                     [(${order.deliveryDate})]
                                 </a>
-                                <a th:if = "${order.accept == null}"><p>Pending</p> </a>
+                                <a th:if = "${order.accept == null}"><p>Oczekujące</p> </a>
                             </td>
                             <td class="price-pr">
                                 <p th:text="${order.orderStatus}"></p>
@@ -74,7 +73,7 @@
                                 <span></span>[(${order.paymentMethod})]</span>
                             </td>
                             <td>
-                                <a th:href="@{/cancel-order/(id = ${order.id})}" class="button-cancel">Cancel</a>
+                                <a th:href="@{/cancel-order/(id = ${order.id})}" class="button-cancel">Anuluj</a>
                             </td>
                             </a>
                             </td>

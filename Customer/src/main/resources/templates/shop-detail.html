@@ -44,19 +44,19 @@
                     <div class="product-item-filter row">
                         <div class="col-12 col-sm-8 text-center text-sm-left">
                             <div class="toolbar-sorter-right">
-                                <span>Sort by </span>
+                                <span>Filtruj </span>
                                 <select id="basic" class="selectpicker show-tick form-control"
                                         data-placeholder="$ USD" onchange="location = this.value;">
-                                    <option>--Select--</option>
-                                    <option value="http://localhost:8020/shop/shop-detail">Normal</option>
-                                    <option value="http://localhost:8020/shop/high-price">High Price → Low Price
+                                    <option>--Wybierz--</option>
+                                    <option value="http://localhost:8020/shop/shop-detail">Normalne</option>
+                                    <option value="http://localhost:8020/shop/high-price">Wysoka cena → Niska cena
                                     </option>
-                                    <option value="http://localhost:8020/shop/lower-price">Low Price → High Price
+                                    <option value="http://localhost:8020/shop/lower-price">Niska cena → Wysoka cena
                                     </option>
-                                    <option value="4">Best Selling</option>
+                                    <option value="4">BestSeller</option>
                                 </select>
                             </div>
-                            <p>Showing all results</p>
+                            <p>Wszystkie wyniki</p>
                         </div>
                         <div class="col-12 col-sm-4 text-center text-sm-right">
                             <ul class="nav nav-tabs ml-auto">
@@ -86,12 +86,12 @@
                                                         <ul>
                                                             <li><a th:href="@{/product-detail/{id}(id = ${product.id})}"
                                                                    data-toggle="tooltip"
-                                                                   data-placement="right" title="View"><i
+                                                                   data-placement="right" title="Zobacz"><i
                                                                     class="fas fa-eye"></i></a></li>
                                                         </ul>
                                                         <input type="hidden" th:value="${product.id}" name="id"
                                                                class="form-control">
-                                                        <input type="submit" class="btn hvr-hover" value="Add to cart">
+                                                        <input type="submit" class="btn hvr-hover" value="Dodaj do kosza">
                                                     </div>
                                                 </div>
                                                 <div class="why-text">
@@ -139,13 +139,13 @@
                 <div class="product-categori">
                     <div class="search-product">
                         <form th:action="@{/search-product}" method="get">
-                            <input class="form-control" name="keyword" placeholder="Search here..." type="text">
+                            <input class="form-control" name="keyword" placeholder="Szukaj tutaj..." type="text">
                             <button type="submit"><i class="fa fa-search"></i></button>
                         </form>
                     </div>
                     <div class="filter-sidebar-left">
                         <div class="title-left">
-                            <h3>Categories</h3>
+                            <h3>Kategorie</h3>
                         </div>
                         <div class="list-group list-group-collapse list-group-sm list-group-tree"
                              id="list-group-men" data-children=".sub-men" th:each="categoryDto : ${categories}">

@@ -49,12 +49,12 @@
                     <div class="single-product-details">
                         <h2 th:text="${productDetail.name}"></h2>
                         <h5 th:text="'$' + ${productDetail.costPrice}"></h5>
-                        <h4>Short Description:</h4>
+                        <h4>Krótki opis:</h4>
                         <p th:text="${productDetail.description}"></p>
                         <div class="price-box-bar">
                             <div class="cart-and-bay-btn">
                                 <input type="hidden" th:value="${productDetail.id}" name="id" class="form-control">
-                                <input type="submit" class="btn hvr-hover" value="Add to cart">
+                                <input type="submit" class="btn hvr-hover" value="Dodaj do kosza">
                             </div>
                         </div>
                     </div>
@@ -66,7 +66,7 @@
     <div class="row my-5">
         <div class="col-lg-12">
             <div class="title-all text-center">
-                <h1>Related Products</h1>
+                <h1>Podobne Produkty</h1>
             </div>
             <div class="featured-products-box owl-carousel owl-theme">
                 <div class="item" th:each="product : ${products}">
@@ -83,7 +83,7 @@
                                                title="View"><i class="fas fa-eye"></i></a></li>
                                     </ul>
                                     <input type="hidden" th:value="${product.id}" name="id" class="form-control">
-                                    <input type="submit" class="btn hvr-hover" value="Add to cart">
+                                    <input type="submit" class="btn hvr-hover" value="Dodaj do kosza">
                                 </div>
                             </div>
                             <div class="why-text">
