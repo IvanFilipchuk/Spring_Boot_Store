@@ -1,43 +1,23 @@
 package com.javaproj.admin.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaproj.library.dto.ProductDto;
 import com.javaproj.library.model.Category;
-import com.javaproj.library.model.Product;
 import com.javaproj.library.service.CategoryService;
 import com.javaproj.library.service.ProductService;
-import com.javaproj.library.utils.ImageUpload;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.io.FileUtils;
-import org.apache.tomcat.util.http.fileupload.disk.DiskFileItem;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.security.Principal;
-import java.sql.Blob;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
-
-import static java.lang.Double.parseDouble;
 
 @Controller
 @RequiredArgsConstructor
@@ -218,11 +198,35 @@ public class ProductController {
 
                         if (priceObject instanceof Number) {
                             costPrice = ((Number) priceObject).doubleValue();
+                        } else if (priceObject instanceof String) {
+                            // Try to parse the String as a double
+                            try {
+                                costPrice = Double.parseDouble((String) priceObject);
+                            } catch (NumberFormatException e) {
+                                throw new IllegalArgumentException("Invalid numeric value: " + priceObject);
+                            }
                         } else {
                             throw new IllegalArgumentException("Invalid numeric value: " + priceObject);
                         }
 
-                        double salePrice = costPrice - ((double) productData.get("discountPercentage") * costPrice / 100);
+                        Object discountPercentageObject = productData.get("discountPercentage");
+                        double discountPercentage;
+
+                        if (discountPercentageObject instanceof Number) {
+                            discountPercentage = ((Number) discountPercentageObject).doubleValue();
+                        } else if (discountPercentageObject instanceof String) {
+                            // Try to parse the String as a double
+                            try {
+                                discountPercentage = Double.parseDouble((String) discountPercentageObject);
+                            } catch (NumberFormatException e) {
+                                throw new IllegalArgumentException("Invalid numeric value for discountPercentage: " + discountPercentageObject);
+                            }
+                        } else {
+                            throw new IllegalArgumentException("Invalid numeric value for discountPercentage: " + discountPercentageObject);
+                        }
+
+                        double salePrice = costPrice - (discountPercentage * costPrice / 100.0);
+
                         String categoryTitle = (String) productData.get("category");
                         Category category = categoryService.findOrCreateCategory(categoryTitle);
 
@@ -308,9 +312,15 @@ public class ProductController {
 
         @Override
         public void transferTo(File dest) throws IOException, IllegalStateException {
-            new FileOutputStream(dest).write(this.content);
+            if (!dest.exists()) {
+                dest.getParentFile().mkdirs(); // Create parent directories if they don't exist
+                dest.createNewFile(); // Create the file
+            }
+
+            try (FileOutputStream fos = new FileOutputStream(dest)) {
+                fos.write(this.content);
+            }
         }
+
     }
 }
-
-
